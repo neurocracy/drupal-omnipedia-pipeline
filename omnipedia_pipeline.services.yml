@@ -1,0 +1,9 @@
+services:
+
+  _defaults:
+    autowire: true
+
+  http_middleware.omnipedia_pipeline.refreshless:
+    class: Drupal\omnipedia_pipeline\StackMiddleware\Refreshless
+    tags:
+      - { name: http_middleware }

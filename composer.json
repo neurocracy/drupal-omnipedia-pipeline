@@ -1,0 +1,22 @@
+{
+  "name": "drupal/omnipedia_pipeline",
+  "description": "Omnipedia - Pipeline",
+  "type": "drupal-custom-module",
+  "license": "GPL-2.0-or-later",
+  "support": {
+    "docs": "https://github.com/neurocracy/drupal-omnipedia-pipeline",
+    "source": "https://github.com/neurocracy/drupal-omnipedia-pipeline"
+  },
+  "authors": [
+    {
+      "name": "Ambient.Impact",
+      "homepage": "https://ambientimpact.com/",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^8.1",
+    "drupal/core": "^10.3 || ^ 11.0",
+    "drupal/refreshless": "^2.0@dev"
+  }
+}
