@@ -37,7 +37,8 @@ In your root `composer.json`, add the following to the `"repositories"` section:
 ```json
 "drupal/omnipedia_pipeline": {
   "type": "vcs",
-  "url": "https://github.com/neurocracy/drupal-omnipedia-pipeline.git"
+  "url": "https://github.com/neurocracy/drupal-omnipedia-pipeline.git",
+  "only": ["drupal/omnipedia_pipeline"]
 }
 ```
 
