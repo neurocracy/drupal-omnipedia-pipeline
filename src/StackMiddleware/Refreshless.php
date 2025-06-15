@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_pipeline\StackMiddleware;
 
-use Drupal\refreshless_turbo\Service\RefreshlessTurboKillSwitchInterface;
+use Drupal\refreshless\Service\RefreshlessKillSwitchInterface;
 use function str_contains;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,12 +21,12 @@ class Refreshless implements HttpKernelInterface {
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   The wrapped HTTP kernel.
    *
-   * @param \Drupal\refreshless_turbo\Service\RefreshlessTurboKillSwitchInterface $killSwitch
-   *   The RefreshLess Turbo kill switch service.
+   * @param \Drupal\refreshless\Service\RefreshlessKillSwitchInterface $killSwitch
+   *   The RefreshLess kill switch service.
    */
   public function __construct(
     protected readonly HttpKernelInterface $httpKernel,
-    protected readonly RefreshlessTurboKillSwitchInterface $killSwitch,
+    protected readonly RefreshlessKillSwitchInterface $killSwitch,
   ) {}
 
   /**

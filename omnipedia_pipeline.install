@@ -1,0 +1,12 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Rebuild container for RefreshLess service change in middleware.
+ */
+function omnipedia_pipeline_update_10101(): void {
+
+  \Drupal::service('kernel')->invalidateContainer();
+
+}
