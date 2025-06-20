@@ -30,37 +30,64 @@ class Refreshless implements HttpKernelInterface {
   ) {}
 
   /**
-   * Determine whether the request appears to be from Pipeline.
+   * Determine whether the request appears to be from legacy Pipeline.
    *
    * @param Request $request
+   *   A request object to check.
    *
    * @return bool
+   *   True if this request is from legacy Pipeline; false otherwise.
    */
-  protected function isPipeline(Request $request): bool {
+  protected function isLegacyPipeline(Request $request): bool {
 
-    return (
-      $request->headers->has('User-Agent') && (
-        // Modern.
-        str_contains(
-          $request->headers->get('User-Agent'), 'PipelineBrowserOmnipedia',
-        ) ||
-        // Legacy before it occurred to us to provide an identifier lolol.
-        $request->headers->get('User-Agent') === 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36'
-      )
+    // It hadn't occurred to us to set a custom user agent at the time, so we have to look for the
+    return $request->headers->get('User-Agent', '') === 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36';
+
+  }
+
+  /**
+   * Determine whether the request appears to be from modern Pipeline.
+   *
+   * @param Request $request
+   *   A request object to check.
+   *
+   * @return bool
+   *   True if this request is from modern Pipeline; false otherwise.
+   */
+  protected function isModernPipeline(Request $request): bool {
+
+    return str_contains(
+      $request->headers->get('User-Agent', ''), 'PipelineBrowserOmnipedia',
     );
 
   }
 
   /**
-   * Whether Pipeline supports RefreshLess for this request.
+   * Whether the request appears to support RefreshLess.
    *
    * @param Request $request
+   *   A request object to check.
    *
    * @return bool
+   *   True if modern Pipeline or non-Pipeline; false if legacy Pipeline.
    */
   protected function supportsRefreshless(Request $request): bool {
-    // Not supported yet.
-    return false;
+
+    // The modern Pipeline user agent takes precedence.
+    if ($this->isModernPipeline($request) === true) {
+      return true;
+    }
+
+    // Legacy Pipeline does not know to listen to RefreshLess events and so is
+    // incompatible after the first full load.
+    if ($this->isLegacyPipeline($request) === true) {
+      return false;
+    }
+
+    // Otherwise, the user agent is probably not Pipeline so it should support
+    // RefreshLess.
+    return true;
+
   }
 
   /**
@@ -74,7 +101,7 @@ class Refreshless implements HttpKernelInterface {
       return $this->httpKernel->handle($request, $type, $catch);
     }
 
-    if ($this->isPipeline($request) && !$this->supportsRefreshless($request)) {
+    if ($this->supportsRefreshless($request) === false) {
       $this->killSwitch->trigger();
     }
 
